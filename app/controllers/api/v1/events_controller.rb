@@ -1,5 +1,5 @@
 class Api::V1::EventsController < ApplicationController
-  before_action :set_event, only: [:show, :update, :destroy]
+  before_action :set_event, only: [:show, :update, :destroy, :users]
 
   # GET /events
   def index
@@ -10,12 +10,12 @@ class Api::V1::EventsController < ApplicationController
 
   # GET /events/1
   def show
-    render json: @event
+    render json: {:event=>@event, :users=>@event.users}
   end
 
   # POST /events
   def create
-    @event = Event.new(event_params)
+    @event = Event.new(creator: params[:creator], when: params[:when], where: params[:where])
 
     if @event.save
       render json: @event, status: :created, location: api_v1_event_url(@event)
